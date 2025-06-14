@@ -41,8 +41,21 @@ if st.button("Reset All Tasks"):
     st.success("All tasks have been reset!")
 
 # Show all tasks
-st.subheader("All Tasks")
-st.dataframe(df)
+today = date.today().isoformat()
+today_df = df[df["Date"] == today]
+
+st.subheader(f"Today's Tasks ({today})")
+st.dataframe(today_df)
+
+if st.button("Show Yesterday's Tasks"):
+    from datetime import timedelta
+    yesterday = (date.today() - timedelta(days=1)).isoformat()
+    yest_df = df[df["Date"] == yesterday]
+    if not yest_df.empty:
+        st.subheader(f"Yesterday's Tasks ({yesterday})")
+        st.dataframe(yest_df)
+    else:
+        st.info("No tasks found for yesterday.")
 
 # Download button
 st.download_button("Download Tasks CSV", df.to_csv(index=False), file_name="tasks.csv")
