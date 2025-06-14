@@ -33,6 +33,13 @@ if st.button("Mark Completed"):
     df.to_csv(FILE_NAME, index=False)
     st.success(f'Task "{task_to_complete}" marked as completed!')
 
+# Reset task list
+st.subheader("Reset Tasks List")
+if st.button("Reset All Tasks"):
+    df = pd.DataFrame(columns=["Task", "Status"])
+    df.to_csv(FILE_NAME, index=False)
+    st.success("All tasks have been reset!")
+
 # Show all tasks
 st.subheader("All Tasks")
 st.dataframe(df)
