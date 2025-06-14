@@ -60,3 +60,8 @@ if st.button("Show Yesterday's Tasks"):
 
 # Download button
 st.download_button("Download Tasks CSV", df.to_csv(index=False), file_name="tasks.csv")
+
+if st.button("Reset All Tasks (Fresh Start)"):
+    df = pd.DataFrame(columns=["Date", "Task", "Status"])
+    df.to_csv("tasks.csv", index=False)
+    st.success("Task list reset! Now you can start fresh.")
