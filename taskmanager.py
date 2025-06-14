@@ -5,6 +5,18 @@ from datetime import date, timedelta
 
 FILE_NAME = "tasks.csv"
 
+# Check file exists aur sahi structure
+if os.path.exists(FILE_NAME):
+    df = pd.read_csv(FILE_NAME)
+    if "Date" not in df.columns or "Task" not in df.columns or "Status" not in df.columns:
+        df = pd.DataFrame(columns=["Date", "Task", "Status"])
+        df.to_csv(FILE_NAME, index=False)
+else:
+    df = pd.DataFrame(columns=["Date", "Task", "Status"])
+    df.to_csv(FILE_NAME, index=False)
+
+FILE_NAME = "tasks.csv"
+
 if os.path.exists(FILE_NAME):
     df = pd.read_csv(FILE_NAME)
 else:
@@ -60,8 +72,3 @@ if st.button("Show Yesterday's Tasks"):
 
 # Download button
 st.download_button("Download Tasks CSV", df.to_csv(index=False), file_name="tasks.csv")
-
-if st.button("Reset All Tasks (Fresh Start)"):
-    df = pd.DataFrame(columns=["Date", "Task", "Status"])
-    df.to_csv("tasks.csv", index=False)
-    st.success("Task list reset! Now you can start fresh.")
