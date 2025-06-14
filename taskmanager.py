@@ -5,7 +5,7 @@ from datetime import date, timedelta
 
 FILE_NAME = "tasks.csv"
 
-# Check file exists aur sahi structure
+# Check file or create/reset if structure wrong
 if os.path.exists(FILE_NAME):
     df = pd.read_csv(FILE_NAME)
     if "Date" not in df.columns or "Task" not in df.columns or "Status" not in df.columns:
@@ -14,6 +14,46 @@ if os.path.exists(FILE_NAME):
 else:
     df = pd.DataFrame(columns=["Date", "Task", "Status"])
     df.to_csv(FILE_NAME, index=False)
+
+st.title("Daily Task Manager")
+
+# Sidebar date dropdown
+if not df.empty:
+    date_options = sorted(df["Date"].unique(), reverse=True)
+else:
+    date_options = [date.today().isoformat()]
+
+selected_date = st.sidebar.selectbox("Select Date", date_options)
+
+# Add task form
+st.subheader("Add New Task")
+with st.form("task_form"):
+    task = st.text_input("Task Description")
+    submitted = st.form_submit_button("Add Task")
+    if submitted:
+        if task:
+            today = date.today().isoformat()
+            new_row = {"Date": today, "Task": task, "Status": "Pending"}
+            df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+            df.to_csv(FILE_NAME, index=False)
+            st.success("Task added!")
+            st.experimental_rerun()  # Refresh app to update sidebar
+        else:
+            st.warning("Please enter a task description.")
+
+# Filter tasks for selected date
+filtered_df = df[df["Date"] == selected_date]
+
+st.subheader(f"Tasks for {selected_date}")
+st.dataframe(filtered_df)
+
+# Reset button
+if st.button("Reset All Tasks"):
+    df = pd.DataFrame(columns=["Date", "Task", "Status"])
+    df.to_csv(FILE_NAME, index=False)
+    st.success("All tasks have been reset!")
+    st.experimental_rerun()
+
 
 FILE_NAME = "tasks.csv"
 
