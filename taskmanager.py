@@ -48,7 +48,7 @@ st.subheader(f"Tasks for {selected_date}")
 st.dataframe(filtered_df)
 
 # Reset button
-if st.button("Reset All Tasks"):
+if st.button("Reset All Tasks", key="reset_button"):
     df = pd.DataFrame(columns=["Date", "Task", "Status"])
     df.to_csv(FILE_NAME, index=False)
     st.success("All tasks have been reset!")
